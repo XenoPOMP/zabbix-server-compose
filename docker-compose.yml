@@ -1,0 +1,21 @@
+services:
+  database:   # Postgresql Database for backend.
+    image: postgres:15-alpine
+    container_name: zabbix-dedicated-database
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE}
+    networks: # Database have to be available in all networks
+      - zabbix
+      - db
+
+volumes:
+  db_data:    # This volume persists database data
+
+networks:
+  zabbix:     # This network is for connecting frontend and backend
+  db:         # This network is for connecting backend with database
