@@ -37,10 +37,10 @@ volumes:
   db_data:    # This volume persists database data
 
 networks:
-  # Network map:
-  # Network           172.20.240.0/20
-  # Database          172.20.240.1
-  # Zabbix server     172.20.240.2
+  # Network map (root):   172.20.0.0/16
+  # Network               172.20.240.0/20
+  # Database              172.20.240.1
+  # Zabbix server         172.20.240.2
   zabbix:
     ipam:
       config:
