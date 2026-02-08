@@ -30,12 +30,17 @@ services:
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
     networks: # Backend have to be accessible by frontend, and have ability to access database
-      - zabbix
+      zabbix:
+        ipv4_address: 172.20.240.2
 
 volumes:
   db_data:    # This volume persists database data
 
 networks:
+  # Network map:
+  # Network           172.20.240.0/20
+  # Database          172.20.240.1
+  # Zabbix server     172.20.240.2
   zabbix:
     ipam:
       config:
