@@ -70,6 +70,19 @@ services:
     volumes:
       - nginx:/etc/ssl/nginx:ro
 
+  agent2:
+    image: zabbix/zabbix-agent2:alpine-${ZBX_VERSION}
+    container_name: zabbix-linux-agent-v2
+    restart: unless-stopped
+    environment:
+      - ZBX_HOSTNAME=172.20.240.5
+      - ZBX_SERVER_HOST=172.20.240.2
+    networks:
+      zabbix:
+        ipv4_address: 172.20.240.5
+    ports:
+      - "10050:10050"
+
 volumes:
   db_data:    # This volume persists database data
   snmptraps:  # For SNMP traps
@@ -83,6 +96,7 @@ networks:
   # Zabbix server         172.20.240.2
   # SNMP Traps            172.20.240.3
   # Frontend              172.20.240.4
+  # Agent                 172.20.240.5
   zabbix:
     ipam:
       config:
