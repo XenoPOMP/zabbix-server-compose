@@ -81,7 +81,7 @@ services:
       zabbix:
         ipv4_address: 172.20.240.5
     ports:
-      - "10050:10050"
+      - "127.0.0.1:10050:10050"
 
 volumes:
   db_data:    # This volume persists database data
