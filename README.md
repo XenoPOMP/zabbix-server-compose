@@ -28,4 +28,4 @@ Now we can compose our app by running command below:
 docker compose up -d
 ```
 
-Web-interface will be available at http://localhost:8080 (if you did changed port inside .env file, use this port instead).
+Web-interface will be available at http://localhost:8080 (if you did change port inside .env file, use this port instead).
