@@ -96,7 +96,7 @@ networks:
   # Zabbix server         172.20.240.2
   # SNMP Traps            172.20.240.3
   # Frontend              172.20.240.4
-  # Agent                 172.20.240.5
+  # Agent                 172.20.240.5:10050
   zabbix:
     ipam:
       config:
