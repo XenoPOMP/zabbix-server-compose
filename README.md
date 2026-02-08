@@ -19,6 +19,8 @@ ZBX_VERSION=7.4.0
 FRONT_END_PORT=8080
 ```
 
+> You can see all available Zabbix versions here: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags?name=alpine-
+
 ## Composing
 
 Now we can compose our app by running command below:
@@ -26,4 +28,4 @@ Now we can compose our app by running command below:
 docker compose up -d
 ```
 
-> You can see all available Zabbix versions here: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags?name=alpine-
+Web-interface will be available at http://localhost:8080 (if you did changed port inside .env file, use this port instead).
