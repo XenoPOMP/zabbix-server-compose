@@ -49,10 +49,32 @@ services:
       zabbix:
         ipv4_address: 172.20.240.3
 
+  frontend:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-${ZBX_VERSION}
+    container_name: zabbix-frontend
+    restart: unless-stopped
+    depends_on:
+      - server
+    environment:
+      - ZBX_SERVER_HOST=172.20.240.2
+      - DB_SERVER_HOST=172.20.240.1
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=zabbix
+    networks:
+      zabbix:
+        ipv4_address: 172.20.240.4
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    volumes:
+      - nginx:/etc/ssl/nginx:ro
+
 volumes:
   db_data:    # This volume persists database data
   snmptraps:  # For SNMP traps
   mibs:       # For SNMP traps
+  nginx:      # Frontend`s nginx files
 
 networks:
   # Network map (root):   172.20.0.0/16
@@ -60,6 +82,7 @@ networks:
   # Database              172.20.240.1
   # Zabbix server         172.20.240.2
   # SNMP Traps            172.20.240.3
+  # Frontend              172.20.240.4
   zabbix:
     ipam:
       config:
