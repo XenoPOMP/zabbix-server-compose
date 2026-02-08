@@ -16,8 +16,8 @@ services:
       retries: 5
       start_period: 10s
     networks: # Database have to be available in all networks
-      - zabbix
-      - db
+      zabbix:
+        ipv4_address: 172.20.240.1
 
   server:     # Zabbix backend
     image: zabbix/zabbix-server-pgsql
@@ -26,16 +26,19 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DB_SERVER_HOST="zabbix-dedicated-database"
+      - DB_SERVER_HOST=172.20.240.1
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
     networks: # Backend have to be accessible by frontend, and have ability to access database
       - zabbix
-      - db
 
 volumes:
   db_data:    # This volume persists database data
 
 networks:
-  zabbix:     # This network is for connecting frontend and backend
-  db:         # This network is for connecting backend with database
+  zabbix:
+    ipam:
+      config:
+        - subnet: "172.20.0.0/16"
+          gateway: "172.20.0.1"
+          ip_range: "172.20.240.0/20"
