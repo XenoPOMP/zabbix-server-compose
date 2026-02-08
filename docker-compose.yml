@@ -2,7 +2,7 @@ services:
   database:   # Postgresql Database for backend.
     image: postgres:15-alpine
     container_name: zabbix-dedicated-database
-    restart: always
+    restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
@@ -20,8 +20,9 @@ services:
         ipv4_address: 172.20.240.1
 
   server:     # Zabbix backend
-    image: zabbix/zabbix-server-pgsql
+    image: zabbix/zabbix-server-pgsql:alpine-${ZBX_VERSION}
     container_name: zabbix-backend
+    restart: unless-stopped
     depends_on:
       database:
         condition: service_healthy
@@ -33,14 +34,32 @@ services:
       zabbix:
         ipv4_address: 172.20.240.2
 
+  snmptraps:  # SNMP Traps
+    image: zabbix/zabbix-snmptraps:alpine-${ZBX_VERSION}
+    container_name: zabbix-snmp-traps
+    restart: unless-stopped
+    depends_on:
+      - server
+    volumes:
+      - snmptraps:/var/lib/zabbix/snmptraps:rw
+      - mibs:/usr/share/snmp/mibs:ro
+    ports:
+      - "162:1162/udp"
+    networks:
+      zabbix:
+        ipv4_address: 172.20.240.3
+
 volumes:
   db_data:    # This volume persists database data
+  snmptraps:  # For SNMP traps
+  mibs:       # For SNMP traps
 
 networks:
   # Network map (root):   172.20.0.0/16
   # Network               172.20.240.0/20
   # Database              172.20.240.1
   # Zabbix server         172.20.240.2
+  # SNMP Traps            172.20.240.3
   zabbix:
     ipam:
       config:
