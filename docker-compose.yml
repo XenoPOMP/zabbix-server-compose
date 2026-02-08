@@ -8,8 +8,18 @@ services:
     environment:
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
-      - POSTGRES_DB=${PGDATABASE}
     networks: # Database have to be available in all networks
+      - zabbix
+      - db
+
+  server:     # Zabbix backend
+    image: zabbix/zabbix-server-pgsql
+    container_name: zabbix-backend
+    environment:
+      - DB_SERVER_HOST="zabbix-dedicated-database"
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+    networks: # Backend have to be accessible by frontend, and have ability to access database
       - zabbix
       - db
 
