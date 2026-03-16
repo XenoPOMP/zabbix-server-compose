@@ -28,4 +28,12 @@ Now we can compose our app by running command below:
 docker compose up -d
 ```
 
+## Accessing web-interface
+
 Web-interface will be available at http://localhost:8080 (if you did change port inside .env file, use this port instead).
+
+_Default credentials:_
+```markdown
+Login - Admin
+Password - zabbix
+```
