@@ -1,3 +1,5 @@
+name: ${CLUSTER_NAME:-zabbix-composed}
+
 services:
   database:   # Postgresql Database for backend.
     image: postgres:15-alpine
