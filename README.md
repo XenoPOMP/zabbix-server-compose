@@ -13,13 +13,13 @@ You have to create file named ``.env`` (code below exists in ``.env.example`` fi
 PGUSER=zabbix
 PGPASSWORD=some_password
 
-# See all available versions: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags?name=alpine-
+# See all available versions: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags
 ZBX_VERSION=7.4.0
 # Web-interface will be available by this port
 FRONT_END_PORT=8080
 ```
 
-> You can see all available Zabbix versions here: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags?name=alpine-
+> You can see all available Zabbix versions here: https://hub.docker.com/r/zabbix/zabbix-server-pgsql/tags
 
 ## Composing
 
