@@ -20,7 +20,7 @@ services:
         ipv4_address: 172.20.240.1
 
   server:     # Zabbix backend
-    image: zabbix/zabbix-server-pgsql:alpine-${ZBX_VERSION}
+    image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
     container_name: zabbix-backend
     restart: unless-stopped
     depends_on:
@@ -35,7 +35,7 @@ services:
         ipv4_address: 172.20.240.2
 
   snmptraps:  # SNMP Traps
-    image: zabbix/zabbix-snmptraps:alpine-${ZBX_VERSION}
+    image: zabbix/zabbix-snmptraps:${ZBX_VERSION:-latest}
     container_name: zabbix-snmp-traps
     restart: unless-stopped
     depends_on:
@@ -50,7 +50,7 @@ services:
         ipv4_address: 172.20.240.3
 
   frontend:
-    image: zabbix/zabbix-web-nginx-pgsql:alpine-${ZBX_VERSION}
+    image: zabbix/zabbix-web-nginx-pgsql:${ZBX_VERSION:-latest}
     container_name: zabbix-frontend
     restart: unless-stopped
     depends_on:
@@ -71,7 +71,7 @@ services:
       - nginx:/etc/ssl/nginx:ro
 
   agent2:
-    image: zabbix/zabbix-agent2:alpine-${ZBX_VERSION}
+    image: zabbix/zabbix-agent2:${ZBX_VERSION:-latest}
     container_name: zabbix-linux-agent-v2
     restart: unless-stopped
     depends_on:
