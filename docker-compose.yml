@@ -1,5 +1,11 @@
 name: ${CLUSTER_NAME:-zabbix-composed}
 
+volumes:
+  db_data:    # This volume persists database data
+  snmptraps:  # For SNMP traps
+  mibs:       # For SNMP traps
+  nginx:      # Frontend`s nginx files
+
 services:
   database:   # Postgresql Database for backend.
     image: postgres:15-alpine
@@ -85,9 +91,3 @@ services:
       - "${FRONT_END_PORT}:8080"
     volumes:
       - nginx:/etc/ssl/nginx:ro
-
-volumes:
-  db_data:    # This volume persists database data
-  snmptraps:  # For SNMP traps
-  mibs:       # For SNMP traps
-  nginx:      # Frontend`s nginx files
