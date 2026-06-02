@@ -30,6 +30,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 10
+    ports:
+      - "10051:10051"
     environment:
       - DB_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-database
       - POSTGRES_USER=${PGUSER}
@@ -74,6 +76,8 @@ services:
     depends_on:
       server:
         condition: service_healthy
+    ports:
+      - "10050:10050"
     environment:
       - ZBX_HOSTNAME=127.0.0.1
       - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
