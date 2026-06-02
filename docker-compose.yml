@@ -3,7 +3,7 @@ name: ${CLUSTER_NAME:-zabbix-composed}
 services:
   database:   # Postgresql Database for backend.
     image: postgres:15-alpine
-    container_name: zabbix-dedicated-database
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-database
     restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -20,7 +20,7 @@ services:
 
   server:     # Zabbix backend
     image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
-    container_name: zabbix-backend
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-backend
     restart: unless-stopped
     depends_on:
       database:
@@ -32,7 +32,7 @@ services:
 
   snmptraps:  # SNMP Traps
     image: zabbix/zabbix-snmptraps:${ZBX_VERSION:-latest}
-    container_name: zabbix-snmp-traps
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-snmp-traps
     restart: unless-stopped
     depends_on:
       - server
@@ -44,7 +44,7 @@ services:
 
   frontend:
     image: zabbix/zabbix-web-nginx-pgsql:${ZBX_VERSION:-latest}
-    container_name: zabbix-frontend
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-frontend
     restart: unless-stopped
     depends_on:
       - server
@@ -62,7 +62,7 @@ services:
 
   agent2:
     image: zabbix/zabbix-agent2:${ZBX_VERSION:-latest}
-    container_name: zabbix-linux-agent-v2
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-linux-agent-v2
     restart: unless-stopped
     depends_on:
       - server
