@@ -24,19 +24,21 @@ services:
     restart: unless-stopped
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "10050" ]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 10
     ports:
       - "10050:10050"
+      - "10051:10051"
     environment:
       - ZBX_HOSTNAME=127.0.0.1
-      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
+      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend,::1,127.0.0.1
 
   server:     # Zabbix backend
     image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
     container_name: ${CLUSTER_NAME:-zabbix-composed}-backend
     restart: unless-stopped
+    network_mode: service:agent2
     depends_on:
       database:
         condition: service_healthy
@@ -44,11 +46,9 @@ services:
         condition: service_healthy
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "10051" ]
-      interval: 30s
+      interval: 5s
       timeout: 10s
       retries: 10
-    ports:
-      - "10051:10051"
     environment:
       - DB_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-database
       - POSTGRES_USER=${PGUSER}
