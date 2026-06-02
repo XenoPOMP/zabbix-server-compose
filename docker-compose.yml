@@ -62,7 +62,7 @@ services:
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=zabbix
     ports:
-      - "8443:8443"
+      - "${SECURE_FRONT_END_PORT}:8443"
       - "${FRONT_END_PORT}:8080"
     volumes:
       - nginx:/etc/ssl/nginx:ro
