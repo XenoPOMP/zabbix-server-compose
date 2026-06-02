@@ -18,6 +18,19 @@ services:
       retries: 5
       start_period: 10s
 
+  agent2:
+    image: zabbix/zabbix-agent2:${ZBX_VERSION:-latest}
+    container_name: ${CLUSTER_NAME:-zabbix-composed}-linux-agent-v2
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+    ports:
+      - "10050:10050"
+    environment:
+      - ZBX_HOSTNAME=127.0.0.1
+      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
+
   server:     # Zabbix backend
     image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
     container_name: ${CLUSTER_NAME:-zabbix-composed}-backend
@@ -68,19 +81,6 @@ services:
       - "${FRONT_END_PORT}:8080"
     volumes:
       - nginx:/etc/ssl/nginx:ro
-
-  agent2:
-    image: zabbix/zabbix-agent2:${ZBX_VERSION:-latest}
-    container_name: ${CLUSTER_NAME:-zabbix-composed}-linux-agent-v2
-    restart: unless-stopped
-    depends_on:
-      server:
-        condition: service_healthy
-    ports:
-      - "10050:10050"
-    environment:
-      - ZBX_HOSTNAME=127.0.0.1
-      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
 
 volumes:
   db_data:    # This volume persists database data
