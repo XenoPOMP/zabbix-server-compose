@@ -22,9 +22,11 @@ services:
     image: zabbix/zabbix-agent2:${ZBX_VERSION:-latest}
     container_name: ${CLUSTER_NAME:-zabbix-composed}-linux-agent-v2
     restart: unless-stopped
-    depends_on:
-      server:
-        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "10050" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
     ports:
       - "10050:10050"
     environment:
@@ -37,6 +39,8 @@ services:
     restart: unless-stopped
     depends_on:
       database:
+        condition: service_healthy
+      agent2:
         condition: service_healthy
     healthcheck:
       test: [ "CMD", "nc", "-z", "localhost", "10051" ]
