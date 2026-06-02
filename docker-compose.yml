@@ -26,7 +26,7 @@ services:
       database:
         condition: service_healthy
     environment:
-      - DB_SERVER_HOST=172.20.240.1
+      - DB_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-database
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
 
@@ -49,8 +49,8 @@ services:
     depends_on:
       - server
     environment:
-      - ZBX_SERVER_HOST=172.20.240.2
-      - DB_SERVER_HOST=172.20.240.1
+      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
+      - DB_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-database
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=zabbix
@@ -67,8 +67,8 @@ services:
     depends_on:
       - server
     environment:
-      - ZBX_HOSTNAME=172.20.240.5
-      - ZBX_SERVER_HOST=172.20.240.2
+      - ZBX_HOSTNAME=127.0.0.1
+      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
 
 volumes:
   db_data:    # This volume persists database data
