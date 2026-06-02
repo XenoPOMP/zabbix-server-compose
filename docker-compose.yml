@@ -17,9 +17,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    networks: # Database have to be available in all networks
-      zabbix:
-        ipv4_address: 172.20.240.1
 
   server:     # Zabbix backend
     image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
@@ -32,9 +29,6 @@ services:
       - DB_SERVER_HOST=172.20.240.1
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
-    networks: # Backend have to be accessible by frontend, and have ability to access database
-      zabbix:
-        ipv4_address: 172.20.240.2
 
   snmptraps:  # SNMP Traps
     image: zabbix/zabbix-snmptraps:${ZBX_VERSION:-latest}
@@ -47,9 +41,6 @@ services:
       - mibs:/usr/share/snmp/mibs:ro
     ports:
       - "162:1162/udp"
-    networks:
-      zabbix:
-        ipv4_address: 172.20.240.3
 
   frontend:
     image: zabbix/zabbix-web-nginx-pgsql:${ZBX_VERSION:-latest}
@@ -63,9 +54,6 @@ services:
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=zabbix
-    networks:
-      zabbix:
-        ipv4_address: 172.20.240.4
     ports:
       - "8443:8443"
       - "${FRONT_END_PORT}:8080"
@@ -81,27 +69,9 @@ services:
     environment:
       - ZBX_HOSTNAME=172.20.240.5
       - ZBX_SERVER_HOST=172.20.240.2
-    networks:
-      zabbix:
-        ipv4_address: 172.20.240.5
 
 volumes:
   db_data:    # This volume persists database data
   snmptraps:  # For SNMP traps
   mibs:       # For SNMP traps
   nginx:      # Frontend`s nginx files
-
-networks:
-  # Network map (root):   172.20.0.0/16
-  # Network               172.20.240.0/20
-  # Database              172.20.240.1
-  # Zabbix server         172.20.240.2
-  # SNMP Traps            172.20.240.3
-  # Frontend              172.20.240.4
-  # Agent                 172.20.240.5:10050
-  zabbix:
-    ipam:
-      config:
-        - subnet: "172.20.0.0/16"
-          gateway: "172.20.0.1"
-          ip_range: "172.20.240.0/20"
