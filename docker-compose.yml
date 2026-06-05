@@ -30,6 +30,8 @@ services:
     ports:
       - "10050:10050"
       - "10051:10051"
+      - "${SECURE_FRONT_END_PORT}:8443"
+      - "${FRONT_END_PORT}:8080"
     environment:
       - ZBX_HOSTNAME=127.0.0.1
       - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend,::1,127.0.0.1
@@ -71,18 +73,16 @@ services:
     image: zabbix/zabbix-web-nginx-pgsql:${ZBX_VERSION:-latest}
     container_name: ${CLUSTER_NAME:-zabbix-composed}-frontend
     restart: unless-stopped
+    network_mode: service:agent2
     depends_on:
       server:
         condition: service_healthy
     environment:
-      - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend
+      - ZBX_SERVER_HOST=127.0.0.1
       - DB_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-database
       - POSTGRES_USER=${PGUSER}
       - POSTGRES_PASSWORD=${PGPASSWORD}
       - POSTGRES_DB=zabbix
-    ports:
-      - "${SECURE_FRONT_END_PORT}:8443"
-      - "${FRONT_END_PORT}:8080"
     volumes:
       - nginx:/etc/ssl/nginx:ro
 
