@@ -37,7 +37,11 @@ services:
       - ZBX_SERVER_HOST=${CLUSTER_NAME:-zabbix-composed}-backend,::1,127.0.0.1
 
   server:     # Zabbix backend
-    image: zabbix/zabbix-server-pgsql:${ZBX_VERSION:-latest}
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+      args:
+        - ZBX_VERSION=${ZBX_VERSION:-latest}
     container_name: ${CLUSTER_NAME:-zabbix-composed}-backend
     restart: unless-stopped
     network_mode: service:agent2
